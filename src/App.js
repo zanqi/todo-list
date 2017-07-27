@@ -30,8 +30,14 @@ class NewTodo extends Component {
 class List extends Component {
   render() {
     var todos = this.props.todos.map(todo => {
-      return <li>{todo.title}</li>
-    }) ;
+      return (
+        <li>
+          <input type="checkBox"/>
+          <span>{todo.title}</span>
+        </li>
+      );
+    });
+
     return (
       <div className="List">
         <ul>
