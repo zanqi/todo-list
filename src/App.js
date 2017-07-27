@@ -10,7 +10,7 @@ class TodoApp extends Component {
           <p>Todos</p>
         </header>
         <NewTodo />
-        <List />
+        <List todos={[{title: "abc"}, {title: "efg"}, {title: "hij"}]} />
         <Footer />
       </div>
     );
@@ -29,12 +29,13 @@ class NewTodo extends Component {
 
 class List extends Component {
   render() {
+    var todos = this.props.todos.map(todo => {
+      return <li>{todo.title}</li>
+    }) ;
     return (
       <div className="List">
         <ul>
-          <li>abc</li>
-          <li>efg</li>
-          <li>hij</li>
+          {todos}          
         </ul>
       </div>
     );
