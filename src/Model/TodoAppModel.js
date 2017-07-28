@@ -16,11 +16,18 @@ class TodoAppModel {
     }
 
     add(title) {
-        this.todos.push({ title: title });
+        this.todos.push({ 
+            title: title,
+            completed: false
+        });
         console.log(this.todos);
         this.notify();
     }
 
+    toggle(todo) {
+        todo.completed = !todo.completed;
+        this.notify();
+    }
 }
 
 export default TodoAppModel;

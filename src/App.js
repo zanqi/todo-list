@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 import TodoAppModel from './Model/TodoAppModel';
@@ -7,16 +8,17 @@ class TodoApp extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      todos: [{ title: "abc" }, { title: "efg" }, { title: "hij" }]
-    }
-    this.props.model.subscribe(this.render.bind(this));
     this.handleNewTodo = this.handleNewTodo.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   handleNewTodo(title) {
     console.log("New Todo!");
     this.props.model.add(title);
+  }
+
+  handleToggle(todo) {
+    this.props.model.toggle(todo);
   }
 
   render() {
@@ -26,7 +28,7 @@ class TodoApp extends Component {
           <p>Todos</p>
         </header>
         <NewTodo onEnter={this.handleNewTodo} />
-        <List todos={this.props.model.todos} />
+        <List todos={this.props.model.todos} onToggle={this.handleToggle} />
         <Footer />
       </div>
     );
@@ -61,11 +63,21 @@ class NewTodo extends Component {
 }
 
 class List extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(todo, e) {
+    this.props.onToggle(todo);
+  }
+
   render() {
     var todos = this.props.todos.map(todo => {
       return (
         <li key={todo.title}>
-          <input type="checkBox" />
+          <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
           <span>{todo.title}</span>
         </li>
       );
@@ -73,6 +85,7 @@ class List extends Component {
 
     return (
       <div className="List">
+        <input type="checkBox"/>
         <ul>
           {todos}
         </ul>
@@ -96,6 +109,7 @@ class Footer extends Component {
   }
 }
 
+
 const model = new TodoAppModel();
 
 class App extends Component {
@@ -111,5 +125,11 @@ class App extends Component {
     );
   }
 }
+
+function render() {
+  ReactDOM.render(<App />, document.getElementById('root'));
+}
+
+model.subscribe(render);
 
 export default App;
