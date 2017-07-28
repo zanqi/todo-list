@@ -10,15 +10,25 @@ class TodoApp extends Component {
 
     this.handleNewTodo = this.handleNewTodo.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+
+    this.state = {
+      editing: ''
+    }
   }
 
   handleNewTodo(title) {
-    console.log("New Todo!");
     this.props.model.add(title);
   }
 
   handleToggle(todo) {
     this.props.model.toggle(todo);
+  }
+
+  handleEdit(todo) {
+    this.setState({
+      editing: todo.id
+    });
   }
 
   render() {
@@ -28,7 +38,9 @@ class TodoApp extends Component {
           <p>Todos</p>
         </header>
         <NewTodo onEnter={this.handleNewTodo} />
-        <List todos={this.props.model.todos} onToggle={this.handleToggle} />
+        <List todos={this.props.model.todos}
+          onToggle={this.handleToggle}
+          onEdit={this.handleEdit} />
         <Footer />
       </div>
     );
@@ -63,33 +75,51 @@ class NewTodo extends Component {
 }
 
 class List extends Component {
-  constructor(props) {
-    super(props);
 
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(todo, e) {
-    this.props.onToggle(todo);
-  }
 
   render() {
-    var todos = this.props.todos.map(todo => {
+    const todos = this.props.todos.map(todo => {
       return (
-        <li key={todo.title}>
-          <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
-          <span>{todo.title}</span>
-        </li>
+        // <li key={todo.id}>
+        //   <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
+
+        //   <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>{todo.title}</label>
+        //   <input type="text" value={todo.title} />
+        // </li>
+        <TodoItem key={todo.id} todo={todo} onToggle={this.props.onToggle} onEdit={this.props.onEdit} />
       );
     });
 
     return (
       <div className="List">
-        <input type="checkBox"/>
+        <input type="checkBox" />
         <ul>
           {todos}
         </ul>
       </div>
+    );
+  }
+}
+
+class TodoItem extends Component {
+
+  handleChange(todo, e) {
+    this.props.onToggle(todo);
+  }
+
+  handleDoubleClick(todo, e) {
+    this.props.onEdit(todo);
+  }
+
+  render() {
+    const todo = this.props.todo;
+    return (
+      <li>
+        <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
+
+        <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>{todo.title}</label>
+        <input type="text" value={todo.title} />
+      </li>
     );
   }
 }

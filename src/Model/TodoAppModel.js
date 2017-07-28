@@ -1,3 +1,5 @@
+import Util from '../Util';
+
 class TodoAppModel {
     constructor() {
         this.observers = [];
@@ -17,6 +19,7 @@ class TodoAppModel {
 
     add(title) {
         this.todos.push({ 
+            id: Util.guid(),
             title: title,
             completed: false
         });
