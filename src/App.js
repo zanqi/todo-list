@@ -31,6 +31,10 @@ class TodoApp extends Component {
     });
   }
 
+  handleClearCompleted() {
+    console.log("Clear!");
+  }
+
   render() {
     return (
       <div className="TodoApp">
@@ -41,7 +45,7 @@ class TodoApp extends Component {
         <List todos={this.props.model.todos}
           onToggle={this.handleToggle}
           onEdit={this.handleEdit} />
-        <Footer />
+        <Footer onClearCompleted={this.handleClearCompleted}/>
       </div>
     );
   }
@@ -61,6 +65,8 @@ class NewTodo extends Component {
         this.props.onEnter(val.trim());
       }
     }
+
+    // todo: esc
   }
 
   render() {
@@ -75,17 +81,9 @@ class NewTodo extends Component {
 }
 
 class List extends Component {
-
-
   render() {
     const todos = this.props.todos.map(todo => {
       return (
-        // <li key={todo.id}>
-        //   <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
-
-        //   <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>{todo.title}</label>
-        //   <input type="text" value={todo.title} />
-        // </li>
         <TodoItem key={todo.id} todo={todo} onToggle={this.props.onToggle} onEdit={this.props.onEdit} />
       );
     });
@@ -133,6 +131,13 @@ class Footer extends Component {
           <a href="">All</a>
           <a href="">Active</a>
           <a href="">Completed</a>
+        </div>
+        <div>
+          <button
+            className="clear-completed"
+            onClick={this.props.onClearCompleted}>
+            Clear completed
+					</button>
         </div>
       </div>
     );
