@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 import TodoAppModel from './Model/TodoAppModel';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
 
 class TodoApp extends Component {
   constructor(props) {
@@ -15,6 +20,16 @@ class TodoApp extends Component {
     this.state = {
       editing: ''
     }
+  }
+
+  componentDidMount() {
+    var setState = this.setState;
+    var router = Router({
+      '/': setState.bind(this, { nowShowing: "ALL_TODOS" }),
+      '/active': setState.bind(this, { nowShowing: "ACTIVE_TODOS" }),
+      '/completed': setState.bind(this, { nowShowing: "COMPLETED_TODOS" })
+    });
+    router.init('/');
   }
 
   handleNewTodo(title) {
@@ -45,7 +60,7 @@ class TodoApp extends Component {
         <List todos={this.props.model.todos}
           onToggle={this.handleToggle}
           onEdit={this.handleEdit} />
-        <Footer onClearCompleted={this.handleClearCompleted}/>
+        <Footer onClearCompleted={this.handleClearCompleted} />
       </div>
     );
   }
@@ -90,7 +105,7 @@ class List extends Component {
 
     return (
       <div className="List">
-        <input type="checkBox" />
+        <input className="ToggleAll" type="checkBox" />
         <ul>
           {todos}
         </ul>
