@@ -18,18 +18,8 @@ class TodoApp extends Component {
     this.handleEdit = this.handleEdit.bind(this);
 
     this.state = {
-      editing: ''
+      editing: '',
     }
-  }
-
-  componentDidMount() {
-    var setState = this.setState;
-    var router = Router({
-      '/': setState.bind(this, { nowShowing: "ALL_TODOS" }),
-      '/active': setState.bind(this, { nowShowing: "ACTIVE_TODOS" }),
-      '/completed': setState.bind(this, { nowShowing: "COMPLETED_TODOS" })
-    });
-    router.init('/');
   }
 
   handleNewTodo(title) {
@@ -51,17 +41,29 @@ class TodoApp extends Component {
   }
 
   render() {
+    const todos = this.props.model.todos;
+    const listProps = {
+      todos: todos,
+      onToggle: this.handleToggle,
+      onEdit: this.handleEdit
+    };
+
     return (
-      <div className="TodoApp">
-        <header>
-          <p>Todos</p>
-        </header>
-        <NewTodo onEnter={this.handleNewTodo} />
-        <List todos={this.props.model.todos}
-          onToggle={this.handleToggle}
-          onEdit={this.handleEdit} />
-        <Footer onClearCompleted={this.handleClearCompleted} />
-      </div>
+      <Router>
+        <div className="TodoApp">
+          <header>
+            <p>Todos</p>
+          </header>
+
+          <NewTodo onEnter={this.handleNewTodo} />
+
+          <Route exact path="/" render={(props) => <List {...listProps} />} />
+          <Route path="/active" render={(props) => <List {...listProps} todos={todos.filter(t => !t.completed)} />} />
+          <Route path="/completed" render={(props) => <List {...listProps} todos={todos.filter(t => t.completed)} />} />
+
+          <Footer onClearCompleted={this.handleClearCompleted} />
+        </div>
+      </Router>
     );
   }
 }
@@ -69,19 +71,21 @@ class TodoApp extends Component {
 class NewTodo extends Component {
   constructor(props) {
     super(props);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
-  handleKeyPress(e) {
+  handleKeyDown(e) {
+    if (e.key !== 'Enter') {
+      return;
+    }
+
     if (e.key === 'Enter') {
       let val = e.target.value;
+      e.target.value = '';
       if (val && val.trim()) {
-        console.log(val);
         this.props.onEnter(val.trim());
       }
     }
-
-    // todo: esc
   }
 
   render() {
@@ -89,7 +93,7 @@ class NewTodo extends Component {
       <div className="NewTodo">
         <input type="text"
           placeholder="What needs to be done?"
-          onKeyPress={this.handleKeyPress} />
+          onKeyDown={this.handleKeyDown} />
       </div>
     );
   }
@@ -143,9 +147,9 @@ class Footer extends Component {
       <div className="Footer">
         <span>1 item left</span>
         <div>
-          <a href="">All</a>
-          <a href="">Active</a>
-          <a href="">Completed</a>
+          <Link to="/">All</Link>
+          <Link to="/active">Active</Link>
+          <Link to="/completed">Completed</Link>
         </div>
         <div>
           <button
