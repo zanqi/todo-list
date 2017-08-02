@@ -17,6 +17,8 @@ class TodoApp extends Component {
     this.handleToggle = this.handleToggle.bind(this);
     this.handleToggleAll = this.handleToggleAll.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleClearCompleted = this.handleClearCompleted.bind(this);
 
     this.state = {
       editing: '',
@@ -42,7 +44,11 @@ class TodoApp extends Component {
   }
 
   handleClearCompleted() {
-    console.log("Clear!");
+    this.props.model.clearCompleted();
+  }
+
+  handleDelete(todo) {
+    this.props.model.delete(todo);
   }
 
   render() {
@@ -51,7 +57,8 @@ class TodoApp extends Component {
       todos: todos,
       onToggle: this.handleToggle,
       onEdit: this.handleEdit,
-      onToggleAll: this.handleToggleAll
+      onToggleAll: this.handleToggleAll,
+      onDelete: this.handleDelete
     };
 
     return (
@@ -109,7 +116,12 @@ class List extends Component {
   render() {
     const todos = this.props.todos.map(todo => {
       return (
-        <TodoItem key={todo.id} todo={todo} onToggle={this.props.onToggle} onEdit={this.props.onEdit} />
+        <TodoItem 
+          key={todo.id} 
+          todo={todo} 
+          onToggle={this.props.onToggle} 
+          onEdit={this.props.onEdit}
+          onDelete={this.props.onDelete} />
       );
     });
 
@@ -126,12 +138,16 @@ class List extends Component {
 
 class TodoItem extends Component {
 
-  handleChange(todo, e) {
+  handleChange(todo) {
     this.props.onToggle(todo);
   }
 
-  handleDoubleClick(todo, e) {
+  handleDoubleClick(todo) {
     this.props.onEdit(todo);
+  }
+
+  handleDelete(todo) {
+    this.props.onDelete(todo);
   }
 
   render() {
@@ -142,6 +158,7 @@ class TodoItem extends Component {
 
         <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>{todo.title}</label>
         <input type="text" value={todo.title} />
+        <button className="delete" onClick={this.handleDelete.bind(this, todo)} >Delete</button>
       </li>
     );
   }

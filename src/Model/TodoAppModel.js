@@ -39,6 +39,16 @@ class TodoAppModel {
 
         this.notify();
     }
+
+    delete(todo) {
+        this.todos = this.todos.filter(t => t!== todo);
+        this.notify();
+    }
+
+    clearCompleted() {
+        this.todos = this.todos.filter(t => !t.completed);
+        this.notify();
+    }
 }
 
 export default TodoAppModel;
