@@ -15,6 +15,7 @@ class TodoApp extends Component {
 
     this.handleNewTodo = this.handleNewTodo.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
+    this.handleToggleAll = this.handleToggleAll.bind(this);
     this.handleEdit = this.handleEdit.bind(this);
 
     this.state = {
@@ -28,6 +29,10 @@ class TodoApp extends Component {
 
   handleToggle(todo) {
     this.props.model.toggle(todo);
+  }
+
+  handleToggleAll(e) {
+    this.props.model.toggleAll(e.target.checked);
   }
 
   handleEdit(todo) {
@@ -45,7 +50,8 @@ class TodoApp extends Component {
     const listProps = {
       todos: todos,
       onToggle: this.handleToggle,
-      onEdit: this.handleEdit
+      onEdit: this.handleEdit,
+      onToggleAll: this.handleToggleAll
     };
 
     return (
@@ -109,7 +115,7 @@ class List extends Component {
 
     return (
       <div className="List">
-        <input className="ToggleAll" type="checkBox" />
+        <input className="ToggleAll" type="checkBox" onChange={this.props.onToggleAll} />
         <ul>
           {todos}
         </ul>

@@ -31,6 +31,14 @@ class TodoAppModel {
         todo.completed = !todo.completed;
         this.notify();
     }
+
+    toggleAll(checked) {
+        this.todos = this.todos.map((t) => {
+            return Util.extend({}, t, {completed: checked});
+        });
+
+        this.notify();
+    }
 }
 
 export default TodoAppModel;
