@@ -18,17 +18,18 @@ class TodoAppModel {
     }
 
     add(title) {
-        this.todos.push({
+        this.todos = this.todos.concat({
             id: Util.guid(),
             title: title,
             completed: false
         });
-        console.log(this.todos);
         this.notify();
     }
 
-    toggle(todo) {
-        todo.completed = !todo.completed;
+    toggle(todoToToggle) {
+        this.todos = this.todos.map((t) => {
+            return t !== todoToToggle ? t : Util.extend({}, todoToToggle, {completed: !todoToToggle.completed});
+        });
         this.notify();
     }
 
