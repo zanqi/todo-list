@@ -8,6 +8,7 @@ import {
   Route,
   Link
 } from 'react-router-dom';
+import classNames from 'classnames';
 
 class TodoApp extends Component {
   constructor(props) {
@@ -46,6 +47,7 @@ class TodoApp extends Component {
 
   handleSave(todo, newText) {
     this.props.model.save(todo, newText);
+    this.setState({ editing: null });
   }
 
   handleClearCompleted() {
@@ -62,6 +64,7 @@ class TodoApp extends Component {
       todos: todos,
       onToggle: this.handleToggle,
       onEdit: this.handleEdit,
+      editing: this.state.editing,
       onSave: this.handleSave,
       onToggleAll: this.handleToggleAll,
       onDelete: this.handleDelete
@@ -80,7 +83,7 @@ class TodoApp extends Component {
           <Route path="/active" render={(props) => <List {...listProps} todos={todos.filter(t => !t.completed)} />} />
           <Route path="/completed" render={(props) => <List {...listProps} todos={todos.filter(t => t.completed)} />} />
 
-          <Footer onClearCompleted={this.handleClearCompleted} />
+          <Footer count={todos.filter(t => !t.completed).length} onClearCompleted={this.handleClearCompleted} />
         </div>
       </Router>
     );
@@ -127,6 +130,7 @@ class List extends Component {
           todo={todo}
           onToggle={this.props.onToggle}
           onEdit={this.props.onEdit}
+          editing={this.props.editing === todo.id}
           onSave={this.props.onSave}
           onDelete={this.props.onDelete} />
       );
@@ -186,7 +190,10 @@ class TodoItem extends Component {
   render() {
     const todo = this.props.todo;
     return (
-      <li>
+      <li className={classNames({
+        completed: this.props.todo.completed,
+        editing: this.props.editing
+      })}>
         <input type="checkBox" checked={todo.completed} onChange={this.handleToggle.bind(this, todo)} />
 
         <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>
@@ -207,7 +214,7 @@ class Footer extends Component {
   render() {
     return (
       <div className="Footer">
-        <span>1 item left</span>
+        <span>{this.props.count} items left</span>
         <div>
           <Link to="/">All</Link>
           <Link to="/active">Active</Link>
