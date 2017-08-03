@@ -21,6 +21,7 @@ class TodoApp extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
 
     this.state = {
       editing: '',
@@ -58,6 +59,10 @@ class TodoApp extends Component {
     this.props.model.delete(todo);
   }
 
+  handleCancel() {
+    this.setState({ editing: null });
+  }
+
   render() {
     const todos = this.props.model.todos;
     const activeTodoCount = todos.filter(t => !t.completed).length;
@@ -69,6 +74,7 @@ class TodoApp extends Component {
       onSave: this.handleSave,
       onToggleAll: this.handleToggleAll,
       onDelete: this.handleDelete,
+      onCancel: this.handleCancel,
       allCompleted: activeTodoCount === 0
     };
 
@@ -134,6 +140,7 @@ class List extends Component {
           onEdit={this.props.onEdit}
           editing={this.props.editing === todo.id}
           onSave={this.props.onSave}
+          onCancel={this.props.onCancel}
           onDelete={this.props.onDelete} />
       );
     });
@@ -149,7 +156,11 @@ class List extends Component {
   }
 }
 
+var ESCAPE_KEY = 27;
+var ENTER_KEY = 13;
+
 class TodoItem extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -158,6 +169,7 @@ class TodoItem extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   handleToggle(todo) {
@@ -177,7 +189,7 @@ class TodoItem extends Component {
     this.setState({ editText: e.target.value });
   }
 
-  handleSubmit(e) {
+  handleSubmit() {
     const newText = this.state.editText.trim();
     const todo = this.props.todo;
 
@@ -187,6 +199,16 @@ class TodoItem extends Component {
     }
     else {
       this.props.onDelete(this.props.todo);
+    }
+  }
+
+  handleKeyDown(e) {
+    if (e.which === ESCAPE_KEY) {
+      this.setState({ editText: this.props.todo.title });
+      this.props.onCancel();
+    }
+    else if (e.which === ENTER_KEY) {
+      this.handleSubmit();
     }
   }
 
@@ -207,6 +229,7 @@ class TodoItem extends Component {
         <input type="text"
           value={this.state.editText}
           onBlur={this.handleSubmit}
+          onKeyDown={this.handleKeyDown}
           onChange={this.handleChange} />
       </li>
     );
