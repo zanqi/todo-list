@@ -82,7 +82,7 @@ class TodoApp extends Component {
       <Router>
         <div className="TodoApp">
           <header>
-            <p>Todos</p>
+            <h1>Todos</h1>
           </header>
 
           <NewTodo onEnter={this.handleNewTodo} />
@@ -147,7 +147,7 @@ class List extends Component {
 
     return (
       <div className="List">
-        <input className="ToggleAll" type="checkBox" checked={this.props.allCompleted} onChange={this.props.onToggleAll}/>
+        <input className="ToggleAll" type="checkBox" checked={this.props.allCompleted} onChange={this.props.onToggleAll} />
         <ul>
           {todos}
         </ul>
@@ -267,7 +267,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Welcome to React Todo</h2>
         </div>
         <TodoApp model={model} />
       </div>
