@@ -60,6 +60,7 @@ class TodoApp extends Component {
 
   render() {
     const todos = this.props.model.todos;
+    const activeTodoCount = todos.filter(t => !t.completed).length;
     const listProps = {
       todos: todos,
       onToggle: this.handleToggle,
@@ -67,7 +68,8 @@ class TodoApp extends Component {
       editing: this.state.editing,
       onSave: this.handleSave,
       onToggleAll: this.handleToggleAll,
-      onDelete: this.handleDelete
+      onDelete: this.handleDelete,
+      allCompleted: activeTodoCount === 0
     };
 
     return (
@@ -138,7 +140,7 @@ class List extends Component {
 
     return (
       <div className="List">
-        <input className="ToggleAll" type="checkBox" onChange={this.props.onToggleAll} />
+        <input className="ToggleAll" type="checkBox" checked={this.props.allCompleted} onChange={this.props.onToggleAll}/>
         <ul>
           {todos}
         </ul>
@@ -164,6 +166,7 @@ class TodoItem extends Component {
 
   handleDoubleClick(todo) {
     this.props.onEdit(todo);
+    this.setState({ editText: todo.title });
   }
 
   handleDelete(todo) {
