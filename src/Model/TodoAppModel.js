@@ -3,7 +3,8 @@ import Util from '../Util';
 class TodoAppModel {
     constructor() {
         this.observers = [];
-        this.todos = [];
+        this.key = 'ReactTodo';
+        this.todos = Util.store(this.key);
     }
 
     subscribe(callback) {
@@ -12,6 +13,7 @@ class TodoAppModel {
     }
 
     notify() {
+        Util.store(this.key, this.todos);
         this.observers.forEach(function (f) {
             f();
         }, this);

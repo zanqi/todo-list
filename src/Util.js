@@ -21,5 +21,15 @@ function extend() {
   return newObj;
 }
 
+exports.store = (namespace, data) => {
+  if (data) {
+    return localStorage.setItem(namespace, JSON.stringify(data));
+  }
+
+  var store = localStorage.getItem(namespace);
+
+  return (store && JSON.parse(store)) || []; // Coupled to array of todos
+}
+
 exports.guid = uuidv4;
 exports.extend = extend;
