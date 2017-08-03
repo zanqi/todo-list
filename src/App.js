@@ -19,6 +19,7 @@ class TodoApp extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClearCompleted = this.handleClearCompleted.bind(this);
+    this.handleSave = this.handleSave.bind(this);
 
     this.state = {
       editing: '',
@@ -43,6 +44,10 @@ class TodoApp extends Component {
     });
   }
 
+  handleSave(todo, newText) {
+    this.props.model.save(todo, newText);
+  }
+
   handleClearCompleted() {
     this.props.model.clearCompleted();
   }
@@ -57,6 +62,7 @@ class TodoApp extends Component {
       todos: todos,
       onToggle: this.handleToggle,
       onEdit: this.handleEdit,
+      onSave: this.handleSave,
       onToggleAll: this.handleToggleAll,
       onDelete: this.handleDelete
     };
@@ -116,11 +122,12 @@ class List extends Component {
   render() {
     const todos = this.props.todos.map(todo => {
       return (
-        <TodoItem 
-          key={todo.id} 
-          todo={todo} 
-          onToggle={this.props.onToggle} 
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={this.props.onToggle}
           onEdit={this.props.onEdit}
+          onSave={this.props.onSave}
           onDelete={this.props.onDelete} />
       );
     });
@@ -137,8 +144,17 @@ class List extends Component {
 }
 
 class TodoItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      editText: ''
+    }
 
-  handleChange(todo) {
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleToggle(todo) {
     this.props.onToggle(todo);
   }
 
@@ -150,15 +166,38 @@ class TodoItem extends Component {
     this.props.onDelete(todo);
   }
 
+  handleChange(e) {
+    this.setState({ editText: e.target.value });
+  }
+
+  handleSubmit(e) {
+    const newText = this.state.editText.trim();
+    const todo = this.props.todo;
+
+    if (newText) {
+      this.props.onSave(todo, newText);
+      this.setState({ editText: newText }); // Trim
+    }
+    else {
+      this.props.onDelete(this.props.todo);
+    }
+  }
+
   render() {
     const todo = this.props.todo;
     return (
       <li>
-        <input type="checkBox" checked={todo.completed} onChange={this.handleChange.bind(this, todo)} />
+        <input type="checkBox" checked={todo.completed} onChange={this.handleToggle.bind(this, todo)} />
 
-        <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>{todo.title}</label>
-        <input type="text" value={todo.title} />
+        <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>
+          {todo.title}
+        </label>
         <button className="delete" onClick={this.handleDelete.bind(this, todo)} >Delete</button>
+
+        <input type="text"
+          value={this.state.editText}
+          onBlur={this.handleSubmit}
+          onChange={this.handleChange} />
       </li>
     );
   }

@@ -11,14 +11,14 @@ class TodoAppModel {
         console.log(this.observers);
     }
 
-    notify(){
-        this.observers.forEach(function(f) {
+    notify() {
+        this.observers.forEach(function (f) {
             f();
         }, this);
     }
 
     add(title) {
-        this.todos.push({ 
+        this.todos.push({
             id: Util.guid(),
             title: title,
             completed: false
@@ -34,19 +34,26 @@ class TodoAppModel {
 
     toggleAll(checked) {
         this.todos = this.todos.map((t) => {
-            return Util.extend({}, t, {completed: checked});
+            return Util.extend({}, t, { completed: checked });
         });
 
         this.notify();
     }
 
     delete(todo) {
-        this.todos = this.todos.filter(t => t!== todo);
+        this.todos = this.todos.filter(t => t !== todo);
         this.notify();
     }
 
     clearCompleted() {
         this.todos = this.todos.filter(t => !t.completed);
+        this.notify();
+    }
+
+    save(todoToSave, newText) {
+        this.todos = this.todos.map(t => {
+            return t !== todoToSave ? t : Util.extend({}, todoToSave, { title: newText });
+        })
         this.notify();
     }
 }
