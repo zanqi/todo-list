@@ -144,8 +144,8 @@ class List extends Component {
 
     return (
       <div className="List">
-        <input className="ToggleAll" type="checkBox" checked={this.props.allCompleted} onChange={this.props.onToggleAll} />
-        <ul>
+        <input className="ToggleAll Toggle" type="checkBox" checked={this.props.allCompleted} onChange={this.props.onToggleAll} />
+        <ul className="TodoList">
           {todos}
         </ul>
       </div>
@@ -216,14 +216,16 @@ class TodoItem extends Component {
         completed: this.props.todo.completed,
         editing: this.props.editing
       })}>
-        <input type="checkBox" checked={todo.completed} onChange={this.handleToggle.bind(this, todo)} />
-
-        <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>
-          {todo.title}
-        </label>
-        <button className="delete" onClick={this.handleDelete.bind(this, todo)} >Delete</button>
+        <div>
+          <input className="Toggle" type="checkBox" checked={todo.completed} onChange={this.handleToggle.bind(this, todo)} />
+          <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>
+            {todo.title}
+          </label>
+          <button className="Delete" onClick={this.handleDelete.bind(this, todo)} ></button>
+        </div>
 
         <input type="text"
+          className="Edit"
           value={this.state.editText}
           onBlur={this.handleSubmit}
           onKeyDown={this.handleKeyDown}
