@@ -81,9 +81,6 @@ class TodoApp extends Component {
     return (
       <Router>
         <div className="TodoApp">
-          <header>
-            <h1>Todos</h1>
-          </header>
 
           <NewTodo onEnter={this.handleNewTodo} />
 
