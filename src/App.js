@@ -78,6 +78,9 @@ class TodoApp extends Component {
       allCompleted: activeTodoCount === 0
     };
 
+    const activeCount = todos.filter(t => !t.completed).length;
+    const completedCount = todos.length - activeCount;
+
     return (
       <Router>
         <div className="TodoApp">
@@ -88,7 +91,7 @@ class TodoApp extends Component {
           <Route path="/active" render={(props) => <List {...listProps} todos={todos.filter(t => !t.completed)} />} />
           <Route path="/completed" render={(props) => <List {...listProps} todos={todos.filter(t => t.completed)} />} />
 
-          <Footer count={todos.filter(t => !t.completed).length} onClearCompleted={this.handleClearCompleted} />
+          <Footer activeCount={activeCount} completedCount={completedCount} onClearCompleted={this.handleClearCompleted} />
         </div>
       </Router>
     );
@@ -237,21 +240,26 @@ class TodoItem extends Component {
 
 class Footer extends Component {
   render() {
+    let clearButton = null;
+    if (this.props.completedCount > 0) {
+      clearButton = (
+        <button
+          className="ClearCompleted"
+          onClick={this.props.onClearCompleted}>
+          Clear completed
+			  </button>
+      );
+    }
+
     return (
       <div className="Footer">
-        <span>{this.props.count} items left</span>
-        <div>
+        <span className="TodoCount">{this.props.activeCount} items left</span>
+        <div className="Filters">
           <Link to="/">All</Link>
           <Link to="/active">Active</Link>
           <Link to="/completed">Completed</Link>
         </div>
-        <div>
-          <button
-            className="clear-completed"
-            onClick={this.props.onClearCompleted}>
-            Clear completed
-					</button>
-        </div>
+        {clearButton}
       </div>
     );
   }
