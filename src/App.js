@@ -213,10 +213,10 @@ class TodoItem extends Component {
     const todo = this.props.todo;
     return (
       <li className={classNames({
-        completed: this.props.todo.completed,
-        editing: this.props.editing
+        Completed: this.props.todo.completed,
+        Editing: this.props.editing
       })}>
-        <div>
+        <div className="View">
           <input className="Toggle" type="checkBox" checked={todo.completed} onChange={this.handleToggle.bind(this, todo)} />
           <label onDoubleClick={this.handleDoubleClick.bind(this, todo)}>
             {todo.title}

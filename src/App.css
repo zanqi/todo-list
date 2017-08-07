@@ -40,7 +40,8 @@ button, input[type="checkbox"] {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1)
 }
 
-.NewTodo input {
+.NewTodo input,
+.Edit {
   padding: 16px 16px 16px 60px;
   border: none;
   background: rgba(0, 0, 0, 0.003);
@@ -122,4 +123,16 @@ button, input[type="checkbox"] {
 
 .TodoList li .Edit {
   display: none;
+}
+
+.TodoList li.Editing .Edit {
+	display: block;
+	width: 506px;
+	padding: 13px 17px 12px 17px;
+  margin: 0 0 0 43px;
+  box-sizing: border-box;
+}
+
+.TodoList li.Editing .View {
+	display: none;
 }
